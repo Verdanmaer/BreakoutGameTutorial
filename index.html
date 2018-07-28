@@ -45,6 +45,8 @@
     let score = 0;
     let lives = 3;
 
+    let bounceAudio = new Audio('bounce.wav');
+
     function setDrawInterval () {
         drawInterval = setInterval(draw, 10);
     }
@@ -68,6 +70,7 @@
         //collisions with walls
         if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
             dx = -dx;
+            
         }
 
         //collision with top
@@ -77,6 +80,7 @@
         //collision with paddle
         } else if (y + dy > canvas.height - paddleHeight 
                 && x > paddleX && x < paddleX + paddleWidth) {
+                    bounceAudio.play();
                     dy = -dy;
                     if (dx > 0) {
                         dx = Math.random() * 5;
