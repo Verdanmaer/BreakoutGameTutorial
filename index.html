@@ -20,7 +20,7 @@
     let x = canvas.width/2;
     let y = canvas.height-30;
 
-    //ball velocity
+    //ball movement direction
     let dx = 2;
     let dy = -2;
 
@@ -64,16 +64,27 @@
         ctx.fillStyle = "#0095DD";
         ctx.fill();
         ctx.closePath();
-
+        
+        //collisions with walls
         if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
             dx = -dx;
         }
 
+        //collision with top
         if (y + dy < ballRadius) {
             dy = -dy;
+
+        //collision with paddle
         } else if (y + dy > canvas.height - paddleHeight 
                 && x > paddleX && x < paddleX + paddleWidth) {
                     dy = -dy;
+                    if (dx > 0) {
+                        dx = Math.random() * 5;
+                    } else {
+                        dx = Math.random() * (-5);
+                    }
+
+        //collision with bottom
         } else if (y + dy > canvas.height) {
                 lives--;
                 clearInterval(drawInterval);
@@ -128,7 +139,6 @@
 
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
-
     document.addEventListener("mousemove", mouseMoveHandler, false);
 
     function keyDownHandler(e) {
