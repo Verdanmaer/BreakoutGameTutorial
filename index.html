@@ -46,6 +46,7 @@
     let lives = 3;
 
     let bounceAudio = new Audio('bounce.wav');
+    let breakingBricksAudio = new Audio('breaking_bricks.wav');
 
     function setDrawInterval () {
         drawInterval = setInterval(draw, 10);
@@ -177,6 +178,7 @@
                         dy = -dy;
                         score++;
                         b.status = 0;
+                        breakingBricksAudio.play();
                         if (score == brickRowCount * brickColumnCount) {
                             alert("You win, congratulations!");
                             document.location.reload();
