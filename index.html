@@ -25,6 +25,10 @@
     let dy = -2;
 
     let ballRadius = 10;
+    let ballLeftBorder = x - ballRadius;
+    let ballRightBorder = x + ballRadius;
+    let ballTopBorder = y - ballRadius;
+    let ballBotBorder = y + ballRadius;
 
     let paddleHeight = 10;
     let paddleWidth = 75;
@@ -49,7 +53,7 @@
     let breakingBricksAudio = new Audio('breaking_bricks.wav');
 
     function setDrawInterval () {
-        drawInterval = setInterval(draw, 10);
+        drawInterval = setInterval(draw, 20);
     }
 
     setDrawInterval();
@@ -133,6 +137,10 @@
         collisionDetection();
         x += dx;
         y += dy;
+        ballLeftBorder = x - ballRadius;
+        ballRightBorder = x + ballRadius;
+        ballTopBorder = y - ballRadius;
+        ballBotBorder = y + ballRadius;
 
         if(rightPressed && paddleX < canvas.width-paddleWidth) {
             paddleX += 7;
@@ -169,20 +177,37 @@
         }
     }
 
+    function horizontalCollision(b) {
+        this.b = b;
+        return ballRightBorder > b.x && ballLeftBorder < b.x + brickWidth && ballBotBorder + dy > b.y && ballTopBorder - dy < b.y + brickHeight;
+    }
+
+    function verticalCollision(b) {
+        this.b = b;
+        return ballRightBorder > b.x && ballLeftBorder < b.x + brickWidth && ballBotBorder > b.y && ballTopBorder < b.y + brickHeight;
+    }
+
+    function collisionActions() {
+        score++;
+        b.status = 0;
+        breakingBricksAudio.play();
+        if (score == brickRowCount * brickColumnCount) {
+            alert("You win, congratulations!");
+            document.location.reload();
+        }
+    }
+
     function collisionDetection() {
         for (let c = 0; c < brickColumnCount; c++) {
             for (let r = 0; r < brickRowCount; r++) {
                 let b = bricks[c][r];
                 if (b.status == 1) {
-                    if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+                    if (horizontalCollision(b)) {
+                        dx = -dx;
+                        collisionActions();
+                    } else if (verticalCollision(b)) {
                         dy = -dy;
-                        score++;
-                        b.status = 0;
-                        breakingBricksAudio.play();
-                        if (score == brickRowCount * brickColumnCount) {
-                            alert("You win, congratulations!");
-                            document.location.reload();
-                        }
+                        collisionActions();
                     }
                 }
                     
