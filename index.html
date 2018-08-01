@@ -50,6 +50,7 @@
 
     let score = 0;
     let lives = 3;
+    let level = 1;
 
     let bounceAudio = new Audio('bounce.wav');
     let breakingBricksAudio = new Audio('breaking_bricks.wav');
@@ -83,9 +84,9 @@
                     bounceAudio.play();
                     dy = -dy;
                     if (dx > 0) {
-                        dx = Math.random() * 5;
+                        dx = Math.random() * 4;
                     } else {
-                        dx = Math.random() * (-5);
+                        dx = Math.random() * (-4);
                     }
 
         //collision with bottom
@@ -138,6 +139,7 @@
         drawPaddle();
         drawScore();
         drawLives();
+        drawLevel();
         collisionDetection();
         x += dx;
         y += dy;
@@ -195,14 +197,13 @@
         score++;
         b.status = 0;
         breakingBricksAudio.play();
-        if (score == brickRowCount * brickColumnCount) {
+        if (score == brickRowCount * brickColumnCount * level) {
             alert("Next Level!");
-            //document.location.reload();
             clearInterval(drawInterval);
-            drawSpeed -= 5;
-            score = 0;
+            drawSpeed -= 2;
+            level++;
             setBricks();
-            setDrawInterval();
+            reloadBall();
         }
     }
 
@@ -236,9 +237,15 @@
         ctx.fillText("Lives: " + lives, canvas.width - 65, 20);
     }
 
+    function drawLevel() {
+        ctx.font = "16px Arial";
+        ctx.fillStyle = '#0095DD';
+        ctx.fillText("Level: " + level, canvas.width/2 - 30 ,20);
+    }
+
     function reloadBall () {
-        x = canvas.width / 2;
-        y = canvas.height / 2;
+        x = canvas.width/2;
+        y = canvas.height/2;
         dx = Math.random()*4 - 2;
         dy = 2;
 
